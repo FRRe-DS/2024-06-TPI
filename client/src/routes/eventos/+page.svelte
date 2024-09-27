@@ -4,7 +4,7 @@
     import axios from 'axios';
 
 
-    let cards = [ { image: 'src/public/pablopicasso.png', eventName: 'el mejor evento', eventStartDate: '20/20/2020', eventFinishDate: '20/20/2020', content: 'una maravilla', title:  "obra 1" }];
+    let cards = [];
 
 
     onMount(async () => {
