@@ -8,7 +8,7 @@
 </script>
 
 <svelte:head>
-  <title>Bienal {anio}</title>
+  <title>Bienal 2024 {anio}</title>
   <link rel="icon" type="image/x-icon" href={logo} style="max-height: 16px; max-width: 16px" class="bg-" />
 </svelte:head>
 

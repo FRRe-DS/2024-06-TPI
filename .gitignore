@@ -456,6 +456,8 @@ Sessionx.vim
 tags
 # Persistent undo
 [._]*.un~
+#visual studio
+.vs
 
 ### VisualStudioCode ###
 .vscode/*
