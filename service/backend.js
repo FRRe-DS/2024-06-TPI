@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-import { ArtistasConsulta, EsculturasConsulta, EventosConsulta, login} from './conecciondb.js';
+import { ArtistasConsulta, EsculturasConsulta, EventosConsulta, login} from './conexiondb.js';
 import { ordenarEsculturas, buscarEsculturas } from './filtrosObjetos.js';
 
 const app = express();

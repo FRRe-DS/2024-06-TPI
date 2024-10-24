@@ -9,7 +9,7 @@ const __dirname = dirname(__filename);
 dotenv.config({ path: join(__dirname, '../.env') });
 
 
-export function crearConeccion(){
+export function crearConexion(){
   return mysql.createConnection({
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
@@ -19,7 +19,7 @@ export function crearConeccion(){
   });
 }
 export async function ArtistasConsulta(filtro, orden, busqueda, cantidad) {
-  const con = crearConeccion();
+  const con = crearConexion();
 
   return new Promise((resolve, reject) => {
     con.connect(function (err) {
@@ -53,7 +53,7 @@ export async function ArtistasConsulta(filtro, orden, busqueda, cantidad) {
 
 export async function EsculturasConsulta() {
   return new Promise((resolve, reject) => { // Aquí creamos una nueva promesa
-    let con = crearConeccion();
+    let con = crearConexion();
 
     con.connect(function (err) {
       if (err) {
@@ -120,7 +120,7 @@ export async function EsculturasConsulta() {
 };
 
 export async function login(correo, password) {
-  let con = crearConeccion();
+  let con = crearConexion();
 
   return new Promise((resolve, reject) => {
     con.connect((err) => {
@@ -151,7 +151,7 @@ export async function login(correo, password) {
 }
 
 export async function EventosConsulta(filtro, orden, busqueda, cantidad) {
-  const con = crearConeccion();
+  const con = crearConexion();
 
   return new Promise((resolve, reject) => {
     con.connect(function (err) {
