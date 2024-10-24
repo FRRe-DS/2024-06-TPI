@@ -28,7 +28,7 @@
 </script>
 
 <div class="search-container">
-  <input
+  <input id="1"
     type="text"
     class="search-input"
     bind:value="{searchQuery}"

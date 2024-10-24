@@ -18,7 +18,7 @@ export function crearConexion(){
     database: process.env.DB_NAME
   });
 }
-export async function ArtistasConsulta(filtro, orden, busqueda, cantidad) {
+export async function ArtistasConsulta() {
   const con = crearConexion();
 
   return new Promise((resolve, reject) => {
@@ -32,19 +32,31 @@ export async function ArtistasConsulta(filtro, orden, busqueda, cantidad) {
       console.log("Connected!");
       // Seleccionar datos de la tabla "artistas"
 
-      con.query('SELECT * FROM artistas', function (err, results) {
+      con.query('call cons_artistas()', function (err, results) {
         if (err) {
           console.error('Error selecting data: ' + err.message);
           reject(err);
           return;
         }
 
-        const listArtistas = results.map((row) => {
-          return new Artistas(row.DNI, row.NyA, row.res_biografia, row.contacto, row.URL_foto);
+        const artistasMap = new Map();
+        
+        results[0].forEach((row) => {
+          const artistaNombre = row.NyA;
+
+          // Verificar si el artista ya está en el map
+          if (!artistasMap.has(artistaNombre)) {
+            // Si no existe, crear una nueva instancia de artistas
+            const nuevoArtista= new Artistas(row.dni, row.NyA, row.res_biografia, row.contacto,row.URL_foto);
+            artistasMap.set(artistaNombre, nuevoArtista);
+          }
         });
 
+        // Convertir el Map a un array de artistas
+        const listArtistas = Array.from(artistasMap.values());
         // Cerrar la conexión
         con.end();
+        
         resolve(listArtistas);
       });
     });
@@ -131,13 +143,10 @@ export async function login(correo, password) {
       }
       console.log("Connected!");
 
-      let selectQuery = `
-        SELECT * FROM visitantes v
-        WHERE v.email = ? AND v.contraseña = ?
-      `;
+      let selectQuery = `call cons_visitantes('${correo}','${password}')`;
 
       // Realizamos la consulta a la base de datos
-      con.query(selectQuery, [correo, password], (err, results) => {
+      con.query(selectQuery, function (err, results){
         if (err) {
           console.error('Error querying the database:', err);
           reject(err); // Rechazar la promesa en caso de error en la consulta
@@ -164,7 +173,7 @@ export async function EventosConsulta(filtro, orden, busqueda, cantidad) {
       console.log("Connected!");
       
       // Seleccionar datos de la tabla "eventos"
-      con.query('SELECT * FROM eventos', function (err, results) {
+      con.query('call cons_eventos()', function (err, results) {
         if (err) {
           console.error('Error selecting data: ' + err.message);
           reject(err);

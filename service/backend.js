@@ -3,11 +3,12 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import { ArtistasConsulta, EsculturasConsulta, EventosConsulta, login} from './conexiondb.js';
-import { ordenarEsculturas, buscarEsculturas } from './filtrosObjetos.js';
+import { ordenarEsculturas, buscarEsculturas, buscarArtistas,ordenarArtistas } from './filtrosObjetos.js';
 
 const app = express();
 const port = 3001;
 let esculturas = [];
+let artistas=[];
 
 app.use(cors()); // Permitir CORS
 // Middleware para analizar el cuerpo de la solicitud (JSON)
@@ -16,31 +17,36 @@ app.use(cookieParser());
 
 
 // Crear una función asincrónica para manejar las consultas a la base de datos
-const obtenerArtistas = async (busqueda) => {
+const obtenerArtistas = async (busqueda,orden) => {
   try {
-    const artistas = await ArtistasConsulta('NyA', 'ASC', busqueda, 20);
-
-    // Asegúrate de que esculturas es un array
+    if (artistas.length == 0) {
+      artistas = await ArtistasConsulta();
+    }
     if (!Array.isArray(artistas)) {
       throw new Error('La consulta no devolvió un array');
     }
+    
+    const artistasFiltrados = buscarArtistas(artistas, busqueda);
+    const artistasOrdenados = ordenarArtistas(artistasFiltrados, orden);
 
     const cards = [];
-
-    for (const [index, artista] of artistas.entries()) {
-      // Accede a los métodos de la clase Esculturas
-      const nombre = artista.getNyA();
-      const imagen = artista.getURL_foto();
-      const biografia = artista.getRes_biografia();
-      const contacto = artista.getContacto();
+    for (let [index, artista] of artistasOrdenados.entries()) {
+      // Accede a los métodos de la clase Artistas
+      const docartista = artista.getDNI();
+      const nombreartista = artista.getNyA();
+      const bioartista = artista.getRes_biografia();
+      const contactoartista = artista.getContacto();
+      const fotoartista = artista.getURL_foto();
 
       cards.push({
         id: index + 1,
-        escultorPantalla: 'Escultor ' + (index + 1),
-        content: biografia,
-        escultorName: nombre,
-        escultorFoto: imagen,
-        contactoEmail: contacto
+        title: 'Carta ' + (index + 1),
+        escultorPantalla:'/escultores/'+nombreartista.replace(/ /g, ''),
+        escultordni:docartista, //en el front no vi que ocupen este pero igual
+        escultorFoto:fotoartista,
+        escultorName:nombreartista,
+        contactoEmail:contactoartista,
+        content:bioartista,
       });
     }
 
@@ -52,7 +58,7 @@ const obtenerArtistas = async (busqueda) => {
   }
 };
 
-const obtenerEsculturas = async (busqueda, criterio, orden) => {
+const obtenerEsculturas = async (busqueda,criterio,orden) => {
   try {
     if (esculturas.length == 0) {
       esculturas = await EsculturasConsulta();
@@ -61,7 +67,6 @@ const obtenerEsculturas = async (busqueda, criterio, orden) => {
     if (!Array.isArray(esculturas)) {
       throw new Error('La consulta no devolvió un array');
     }
-
     const esculturasFiltradas = buscarEsculturas(esculturas, busqueda);
     const esculturasOrdenadas = ordenarEsculturas(esculturasFiltradas, criterio, orden);
 
@@ -150,7 +155,7 @@ const obtenerEventos = async (busqueda) => {
     return cards;
 
   } catch (error) {
-    console.error('Error al obtener artistas:', error);
+    console.error('Error al obtener eventos:', error);
     return [];  // Retornar un array vacío en caso de error
   }
 };
@@ -158,7 +163,7 @@ const obtenerEventos = async (busqueda) => {
 // Endpoint para obtener escultores
 app.get('/api/escultores', async (req, res) => {
   const searchQuery = req.query.search;
-  const cards = await obtenerArtistas(searchQuery);  // Esperamos a que se procesen todas las consultas
+  const cards = await obtenerArtistas(searchQuery,'DESC');  // desc solo está explícito para probar si funciona, después se configura en el front
   res.json(cards);
 });
 
@@ -186,9 +191,9 @@ app.post('/api/login', (req, res) => {
   }
 
   login(correo, contraseña)
-    .then(coneccion => {
+    .then(conexion => {
       // Aquí es donde manejamos los resultados
-      if (coneccion && coneccion.length > 0) {
+      if (conexion && conexion.length > 0) {
         // Establecer la cookie antes de enviar la respuesta
         res.cookie('correo', correo, { httpOnly: true, maxAge: 3600000 }); // Cookie válida por 1 hora
         return res.status(200).json({ success: true, message: 'Inicio de sesión exitoso' });

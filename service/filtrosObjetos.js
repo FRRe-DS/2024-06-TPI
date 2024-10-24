@@ -48,14 +48,13 @@ export function buscarEsculturas(listaEsculturas, busqueda) {
             }
 
             // Verificar coincidencias en la lista de artistas
-            const artistas = escultura.getArtistas(); // Obtener la lista de artistas
+            let artistas = escultura.getArtistas(); // Obtener la lista de artistas
 
             if (Array.isArray(artistas)) {
                 for (const artista of artistas) {
-                    // Validar que el artista tenga nombre y apellido
-                    if (artista && artista.nombre && artista.apellido) {
-                        if (artista.nombre.toLowerCase().includes(busqueda) ||
-                            artista.apellido.toLowerCase().includes(busqueda)) {
+                    // Validar que el artista tenga nombre 
+                    if (artista && artista.NyA) {
+                        if (artista.NyA.toLowerCase().includes(busqueda)) {
                             resultados.push(escultura);
                             break; // No es necesario seguir buscando más artistas
                         }
@@ -65,5 +64,38 @@ export function buscarEsculturas(listaEsculturas, busqueda) {
         }
     });
 
+    return resultados;
+}
+export function ordenarArtistas(listaArtistas,orden) {
+    
+    return listaArtistas.sort((a, b) => {
+        let comparison=0;
+        comparison = a.getNyA().localeCompare(b.getNyA());
+        // Ajuste según el orden (ascendente o descendente)
+        if (orden === 'DESC') {
+            comparison = comparison * -1; // Invierte el orden para descendente
+        }
+        return comparison
+    });
+};
+
+export function buscarArtistas(listaArtistas, busqueda) {
+    let resultados=[];
+     // Convertir la búsqueda a minúsculas
+    if (busqueda==""){
+        listaArtistas.forEach(artista => {
+            // Validar que el artista no sea undefined y que tenga los métodos necesarios
+            if (artista && typeof artista.getNyA === 'function') {
+                resultados.push(artista)}
+            })
+    }else{busqueda = busqueda.toLowerCase();
+        listaArtistas.forEach(artista => {
+        if (artista && artista.NyA && typeof artista.getNyA === 'function') {
+                if (artista.NyA.toLowerCase().includes(busqueda)) {
+                    resultados.push(artista);
+                }
+        }
+        })
+    }
     return resultados;
 }
