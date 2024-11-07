@@ -2,14 +2,17 @@
   "scripts": {
     "build:client": "cd client && npm install && npm run build",
     "start:client": "cd client && npm run preview",
-    "start:service": "cd service && npm start",
+    "start:service": "cd service && node backend.js",  
     "start": "npm run start:service & npm run start:client"
   },
+  
   "devDependencies": {
     "concurrently": "^7.0.0",
     "vite": "^4.0.0"
   },
+  
   "type": "module",
+  
   "dependencies": {
     "@sveltejs/adapter-auto": "^3.2.5",
     "dotenv": "^16.4.5",
