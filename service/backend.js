@@ -12,7 +12,7 @@ let eventos = [];
 let artistas = [];
 let usuario = '';
 
-const port = process.env.PORT || 3001;  // Si hay un puerto asignado en producción, úsalo; de lo contrario, usa 3001
+const port = process.env.PORT || 3002;  // Si hay un puerto asignado en producción, úsalo; de lo contrario, usa 3001
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

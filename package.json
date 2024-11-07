@@ -3,6 +3,7 @@
     "start": "concurrently \"cd service && npm install && node backend.js\" \"cd client/src && npm install && npm run build && npm run preview\""
   },
   "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^4.0.0",
     "concurrently": "^7.0.0",
     "vite": "^5.0.0"
   },
