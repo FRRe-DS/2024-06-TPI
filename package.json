@@ -1,4 +1,12 @@
 {
+  "scripts": {
+    "start": "concurrently \"cd service && npm install && node backend.js\" \"cd client/src && npm install && npm run dev\""
+  },
+  
+  "devDependencies": {
+    "concurrently": "^7.0.0"
+  },
+
   "type": "module",
   "dependencies": {
     "@sveltejs/adapter-auto": "^3.2.5",
