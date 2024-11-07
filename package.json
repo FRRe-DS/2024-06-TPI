@@ -1,12 +1,13 @@
 {
   "scripts": {
-    "start": "concurrently \"cd service && npm install && node backend.js\" \"cd client/src && npm install && npm run dev\""
+    "build:client": "cd client && npm install && npm run build",
+    "start:client": "cd client && npm run preview",
+    "start:service": "cd service && npm start", // Asegúrate de tener un script "start" en el package.json del backend
+    "start": "npm run start:service & npm run start:client"
   },
-  
   "devDependencies": {
     "concurrently": "^7.0.0"
   },
-
   "type": "module",
   "dependencies": {
     "@sveltejs/adapter-auto": "^3.2.5",
