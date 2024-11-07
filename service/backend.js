@@ -6,11 +6,18 @@ import { ArtistasConsulta, EsculturasConsulta, EventosConsulta, login} from './c
 import { ordenarEsculturas, buscarEsculturas, ordenarEventos, buscarEventos, ordenarArtistas, buscarArtistas } from './filtrosObjetos.js';
 
 const app = express();
-const port = 3001;
+
 let esculturas = [];
 let eventos = [];
 let artistas = [];
 let usuario = '';
+
+const port = process.env.PORT || 3001;  // Si hay un puerto asignado en producción, úsalo; de lo contrario, usa 3001
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
+
+
 
 app.use(cors()); // Permitir CORS
 // Middleware para analizar el cuerpo de la solicitud (JSON)
