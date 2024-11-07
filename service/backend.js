@@ -18,6 +18,42 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 
+
+
+import express from 'express';  // Si estás utilizando módulos ES
+
+ app = express();
+ port = 3000;
+
+app.get('/', (req, res) => {
+  res.send('Hello, World!');
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Crear una función asincrónica para manejar las consultas a la base de datos
 const obtenerArtistas = async (busqueda, criterio, orden) => {
   try {
