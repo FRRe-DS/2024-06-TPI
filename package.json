@@ -6,7 +6,8 @@
     "start": "npm run start:service & npm run start:client"
   },
   "devDependencies": {
-    "concurrently": "^7.0.0"
+    "concurrently": "^7.0.0",
+    "vite": "^4.0.0"
   },
   "type": "module",
   "dependencies": {
