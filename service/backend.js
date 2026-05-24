@@ -498,7 +498,14 @@ app.get('/api/eventoProximo', async (req, res) => {
 app.get('/api/eventos/:nombre', async (req, res) => {
   const nombre = req.params.nombre;
   const cards = await obtenerEventos(nombre, 'nombre', 'DESC');
-  const cardsObras = await obtenerObrasdeEvento(nombre);
+  
+  if (!cards || cards.length === 0) {
+    return res.status(404).json({ message: 'Evento no encontrado' });
+  }
+
+  const realEventName = cards[0].eventName;
+  const cardsObras = await obtenerObrasdeEvento(realEventName);
+  
   const respuesta = {
     evento: cards[0],
     obras: cardsObras
